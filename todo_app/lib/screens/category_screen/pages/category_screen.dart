@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:todo_app/localization/languages/languages.dart';
+import 'package:todo_app/screens/home_screen.dart';
 import 'package:todo_app/theme/theme_const.dart';
 import 'package:todo_app/widgets/app_textview.dart';
 
@@ -111,6 +113,14 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
                 ],
               ),
             ),
+            ElevatedButton(onPressed: (){
+                Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const HomePage(), // Replace with the actual dashboard screen
+                              ),
+                            );
+            }, child: Text('Home'))
           ],
         ),
       ),

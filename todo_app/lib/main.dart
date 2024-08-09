@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
           title: StringConstants.appName,
           debugShowCheckedModeBanner: false,
           theme: ThemeConst.lightThemeData,
-          home:   HomePage(title: 'Flutter Demo Home Page'),
+          home:   HomePage(),
           locale: _locale,
           builder: (context, widget) {
             widget = botToastBuilder(context, widget);

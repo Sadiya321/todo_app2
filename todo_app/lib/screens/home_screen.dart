@@ -3,13 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:todo_app/custom_widgets/custom_appbar.dart';
 import 'package:todo_app/screens/add_new_screen.dart';
+import 'package:todo_app/screens/category_screen/pages/category_screen.dart';
 import 'package:todo_app/theme/theme_const.dart';
 import 'package:todo_app/widgets/app_textview.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+  const HomePage({super.key,});
 
-  final String title;
+  
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -67,33 +68,72 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.background,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(60.0),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateTaskScreen(), // Replace with the actual dashboard screen
-                              ),
-                            );
-                          },
-                          child: AppTextView(
-                            text: "Add New",
-                            textStyle: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.background,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(60.0),
                                 ),
-                          ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateTaskScreen(), // Replace with the actual dashboard screen
+                                  ),
+                                );
+                              },
+                              child: AppTextView(
+                                text: "Add New",
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                            SizedBox(width:0.01.sw),
+ ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.background,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(60.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CategorySelectionScreen(), // Replace with the actual dashboard screen
+                                  ),
+                                );
+                              },
+                              child: AppTextView(
+                                text: "Categories",
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+
+                            
+
+              
+                          ],
                         ),
+
+
+                        
                       ],
                     ),
                   ),
@@ -187,14 +227,17 @@ class _HomePageState extends State<HomePage> {
                             "Work on project",
                             "18:00 - 19:00",
                           ),
+                          
                         ],
                       ),
                     ),
+                    
                   ],
                 ),
               ),
             ),
           ),
+          
         ],
       ),
     );
