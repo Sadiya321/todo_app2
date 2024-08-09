@@ -174,6 +174,8 @@ class ThemeConst {
 
 extension ColorExtends on ColorScheme {
   static const primaryColorl = Color.fromARGB(255, 15, 15, 150);
+    static const textColor1 = Color(0xFF000000);
+
   static const primaryColorD = Color.fromARGB(255, 15, 15, 150);
   static const primaryColorLightl = Color.fromARGB(255, 15, 15, 150);
   static const primaryColorLightD = Color.fromARGB(255, 15, 15, 150);
@@ -315,6 +317,8 @@ extension ColorExtends on ColorScheme {
   Color get grey => _lightTheme ? greyl : greyD;
 
   Color get greyLight => _lightTheme ? greyLightl : greyLightD;
+
+  Color get textColor => _lightTheme ? textColor1 : textColor1;
 
   Color get white => _lightTheme ? whitel : whiteD;
 

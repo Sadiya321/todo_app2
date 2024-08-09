@@ -7,5 +7,8 @@ class LanguageEn extends Languages {
   @override
   String get today => "today";
   
+  @override
+  String get chooseCat => "Choose Category";
+  
   
 }
