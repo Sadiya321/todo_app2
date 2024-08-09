@@ -22,15 +22,26 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      resizeToAvoidBottomInset: true, // Ensure the screen resizes to avoid the keyboard
+      resizeToAvoidBottomInset:
+          true, // Ensure the screen resizes to avoid the keyboard
       appBar: AppBar(
         title: AppTextView(
           text: 'Task Title',
-          textStyle: Theme.of(context).textTheme.titleMedium,
+          textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.primary, // Set text color
+              ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor:
+            Theme.of(context).colorScheme.surface, // Set background color
+        foregroundColor: Theme.of(context)
+            .colorScheme
+            .surface, 
+           iconTheme: IconThemeData(
+    color: Theme.of(context).colorScheme.primary,   // Ensure icons and text are visible
       ),
-      body: SingleChildScrollView( // Wrap the entire content in SingleChildScrollView
+      ),
+      body: SingleChildScrollView(
+        // Wrap the entire content in SingleChildScrollView
         child: Padding(
           padding: EdgeInsets.all(20.w),
           child: Column(
@@ -182,11 +193,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   ),
                   child: AppTextView(
                     text: "Create Task",
-                    textStyle:
-                        Theme.of(context).textTheme.labelSmall!.copyWith(
-                              color: Theme.of(context).colorScheme.surface,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    textStyle: Theme.of(context).textTheme.labelSmall!.copyWith(
+                          color: Theme.of(context).colorScheme.surface,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
               ),

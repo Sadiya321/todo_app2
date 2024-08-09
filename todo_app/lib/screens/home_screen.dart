@@ -128,7 +128,13 @@ class _HomePageState extends State<HomePage> {
 
                             
 
-              
+                //              ElevatedButton(onPressed: (){
+                // Navigator.of(context).push(
+                //               MaterialPageRoute(
+                //                 builder: (context) =>
+                //                     const HomePage(), // Replace with the actual dashboard screen
+                //               ),
+                //             );}, child: Text("Categories"),)
                           ],
                         ),
 

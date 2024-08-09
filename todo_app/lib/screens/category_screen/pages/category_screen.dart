@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:todo_app/localization/languages/languages.dart';
-import 'package:todo_app/screens/home_screen.dart';
 import 'package:todo_app/theme/theme_const.dart';
 import 'package:todo_app/widgets/app_textview.dart';
 
@@ -27,22 +25,21 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
     final endDate = DateTime(DateTime.now().year, DateTime.now().month + 1, 0);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: const Text(
-          '01 August',
-          style: TextStyle(color: Colors.black),
+       appBar: AppBar(
+        title: AppTextView(
+          text: 'Categories',
+          textStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.primary, // Set text color
+              ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.alarm),
-            color: Colors.black,
-            onPressed: () {
-              // Handle the action
-            },
-          ),
-        ],
+        // backgroundColor:
+        //     Theme.of(context).colorScheme.primary, // Set background color
+        foregroundColor: Theme.of(context)
+            .colorScheme
+            .surface, 
+           iconTheme: IconThemeData(
+    color: Theme.of(context).colorScheme.primary,   // Ensure icons and text are visible
+      ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -113,14 +110,7 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
                 ],
               ),
             ),
-            ElevatedButton(onPressed: (){
-                Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const HomePage(), // Replace with the actual dashboard screen
-                              ),
-                            );
-            }, child: Text('Home'))
+           
           ],
         ),
       ),
