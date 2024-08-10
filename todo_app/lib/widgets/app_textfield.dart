@@ -63,7 +63,7 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
+      // margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -86,7 +86,7 @@ class _AppTextFieldState extends State<AppTextField> {
               BoxShadow(
                 color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
                 spreadRadius: 0.5,
-                blurRadius: 30,
+                blurRadius: 10,
                 offset: Offset(0, 4),
               )
             ]),
@@ -105,9 +105,9 @@ class _AppTextFieldState extends State<AppTextField> {
                 filled: true,
                 suffixIcon: widget.suffixIcon,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50.0),
+                  borderRadius: BorderRadius.circular(0.0),
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 10.w),
+                // contentPadding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 10.w),
               ),
               style: Theme.of(context).textTheme.labelMedium!.copyWith(
                 fontSize: 16.sp,
