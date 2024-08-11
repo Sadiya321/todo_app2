@@ -1,10 +1,11 @@
 import 'dart:convert'; // Import to use jsonEncode and jsonDecode
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/theme/theme_const.dart';
-import 'package:todo_app/widgets/app_textview.dart';
 import 'package:todo_app/widgets/app_textfield.dart';
+import 'package:todo_app/widgets/app_textview.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
@@ -303,6 +304,27 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context)
+                  .colorScheme
+                  .primary, // Header background color
+              onPrimary: Colors.white, // Header text color
+              onSurface:
+                  Theme.of(context).colorScheme.onSurface, // Body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    Theme.of(context).colorScheme.primary, // Button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _startDate) {
       setState(() {
@@ -315,6 +337,43 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context)
+                  .colorScheme
+                  .primary, // Header background color
+              onPrimary: Colors.white, // Header text color
+              onSurface:
+                  Theme.of(context).colorScheme.onSurface, // Body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    Theme.of(context).colorScheme.primary, // Button text color
+              ),
+            ),
+            timePickerTheme: TimePickerThemeData(
+              dialHandColor:
+                  Theme.of(context).colorScheme.primary, // Color of the hand
+              dialBackgroundColor:
+                  Colors.grey[200], // Background color of the dial
+              hourMinuteColor: MaterialStateColor.resolveWith(
+                (states) => states.contains(MaterialState.selected)
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey[200]!,
+              ), // Color of hour and minute text
+              hourMinuteTextColor: MaterialStateColor.resolveWith(
+                (states) => states.contains(MaterialState.selected)
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.onSurface,
+              ), // Color of hour and minute text
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _startTime) {
       setState(() {
