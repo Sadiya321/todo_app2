@@ -1,5 +1,8 @@
+import 'dart:convert'; // Import to use jsonEncode and jsonDecode
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_app/theme/theme_const.dart';
 import 'package:todo_app/widgets/app_textview.dart';
 import 'package:todo_app/widgets/app_textfield.dart';
 
@@ -15,7 +18,38 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   String _selectedCategory = 'Personal'; // Default category
   DateTime? _startDate;
+  TimeOfDay? _startTime;
   DateTime? _deadlineDate;
+  TimeOfDay? _deadlineTime;
+
+  void _createTask() async {
+    // Retrieve SharedPreferences instance
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Prepare task data
+    Map<String, dynamic> task = {
+      'title': _titleController.text,
+      'category': _selectedCategory,
+      'description': _descriptionController.text,
+      'startDate': _startDate?.toIso8601String(),
+      'startTime': _startTime?.format(context),
+      'deadlineDate': _deadlineDate?.toIso8601String(),
+      'deadlineTime': _deadlineTime?.format(context),
+    };
+
+    // Convert the task map to a JSON string
+    String taskJson = jsonEncode(task);
+
+    // Save task to SharedPreferences as a JSON string
+    String taskKey = 'task_${DateTime.now().millisecondsSinceEpoch}';
+    await prefs.setString(taskKey, taskJson);
+
+    // Print task data (for debugging)
+    print('Task saved: $taskJson');
+
+    // Navigate back or show a success message
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +88,17 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               text: 'Category',
               textStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primaryColor
+                        .withOpacity(0.6),
                   ),
             ),
             SizedBox(height: 10.h),
             Row(
               children: [
-                _buildCategoryButton('Personal', _selectedCategory == 'Personal'),
+                _buildCategoryButton(
+                    'Personal', _selectedCategory == 'Personal'),
                 SizedBox(width: 10.w),
                 _buildCategoryButton('Teams', _selectedCategory == 'Teams'),
                 SizedBox(width: 10.w),
@@ -79,7 +117,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             _buildDateAndTimePicker(),
             SizedBox(height: 20.h),
             AppTextField(
-              controller: TextEditingController(), // Placeholder for attachments/links
+              controller:
+                  TextEditingController(), // Placeholder for attachments/links
               hintText: 'Any relevant files or links',
               title: 'Attachments/Links',
               onValueChange: (value) {},
@@ -110,7 +149,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15.h),
           decoration: BoxDecoration(
-            color: isSelected ? Theme.of(context).colorScheme.primary : Colors.white,
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Colors.white,
             border: Border.all(
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -119,16 +160,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                category == 'Personal'
-                    ? Icons.person
-                    : Icons.group,
-                color: isSelected ? Colors.white : Theme.of(context).colorScheme.primary,
+                category == 'Personal' ? Icons.person : Icons.group,
+                color: isSelected
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.primary,
               ),
               SizedBox(width: 5.w),
               AppTextView(
                 text: category,
                 textStyle: Theme.of(context).textTheme.button!.copyWith(
-                      color: isSelected ? Colors.white : Theme.of(context).colorScheme.primary,
+                      color: isSelected
+                          ? Colors.white
+                          : Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -145,10 +188,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-         color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
-      child:  Icon(Icons.arrow_drop_down, color: Theme.of(context).colorScheme.primary,),
+      child: Icon(
+        Icons.arrow_drop_down,
+        color: Theme.of(context).colorScheme.primary,
+      ),
     );
   }
 
@@ -161,7 +207,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             child: _buildDatePicker(
               icon: Icons.calendar_today,
               hint: _startDate == null
-                  ? 'dd/mm/yy'
+                  ? 'Start Date'
                   : '${_startDate!.toLocal()}'.split(' ')[0],
             ),
           ),
@@ -169,12 +215,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         SizedBox(width: 20.w),
         Expanded(
           child: GestureDetector(
-            onTap: () => _selectDeadlineDate(context),
+            onTap: () => _selectStartTime(context),
             child: _buildDatePicker(
               icon: Icons.access_time,
-              hint: _deadlineDate == null
-                  ? 'hh:mm'
-                  : '${_deadlineDate!.toLocal()}'.split(' ')[1],
+              hint: _startTime == null
+                  ? 'Start Time'
+                  : _startTime!.format(context),
             ),
           ),
         ),
@@ -194,7 +240,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary,),
+          Icon(
+            icon,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           SizedBox(width: 10.w),
           AppTextView(
             text: hint,
@@ -207,83 +256,70 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
- Widget _buildCancelButton() {
-  return ElevatedButton(
-    onPressed: () => Navigator.of(context).pop(),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.white,
-      side: BorderSide(color: Theme.of(context).colorScheme.primary),
-      padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero, // Remove circular radius
+  Widget _buildCancelButton() {
+    return ElevatedButton(
+      onPressed: () => Navigator.of(context).pop(),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        side: BorderSide(color: Theme.of(context).colorScheme.primary),
+        padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero, // Remove circular radius
+        ),
       ),
-    ),
-    child: AppTextView(
-      text: "Cancel",
-      textStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
-    ),
-  );
-}
+      child: AppTextView(
+        text: "Cancel",
+        textStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+      ),
+    );
+  }
 
- Widget _buildCreateButton() {
-  return ElevatedButton(
-    onPressed: _createTask,
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero, // Remove circular radius
+  Widget _buildCreateButton() {
+    return ElevatedButton(
+      onPressed: _createTask,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero, // Remove circular radius
+        ),
       ),
-    ),
-    child: AppTextView(
-      text: "Create",
-      textStyle: Theme.of(context).textTheme.button!.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-    ),
-  );
-}
+      child: AppTextView(
+        text: "Create",
+        textStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+      ),
+    );
+  }
 
   Future<void> _selectStartDate(BuildContext context) async {
-    DateTime? selectedDate = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-
-    if (selectedDate != null) {
+    if (picked != null && picked != _startDate) {
       setState(() {
-        _startDate = selectedDate;
+        _startDate = picked;
       });
     }
   }
 
-  Future<void> _selectDeadlineDate(BuildContext context) async {
-    DateTime? selectedDate = await showDatePicker(
+  Future<void> _selectStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      initialTime: TimeOfDay.now(),
     );
-
-    if (selectedDate != null) {
+    if (picked != null && picked != _startTime) {
       setState(() {
-        _deadlineDate = selectedDate;
+        _startTime = picked;
       });
     }
-  }
-
-  void _createTask() {
-    // Add your task creation logic here
-    print('Title: ${_titleController.text}');
-    print('Category: $_selectedCategory');
-    print('Description: ${_descriptionController.text}');
-    print('Start Date: $_startDate');
-    print('Deadline Date: $_deadlineDate');
   }
 }
