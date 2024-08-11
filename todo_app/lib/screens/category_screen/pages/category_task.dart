@@ -37,7 +37,11 @@ class CategoryTasksScreen extends StatelessWidget {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
-              return TaskCard(task: data);
+              return TaskCard(
+                task: data,
+                taskId: document.id,
+                userId: _auth.currentUser!.uid, // Pass the user ID
+              );
             }).toList(),
           );
         },
@@ -62,8 +66,15 @@ class CategoryTasksScreen extends StatelessWidget {
 
 class TaskCard extends StatelessWidget {
   final Map<String, dynamic> task;
+  final String taskId;
+  final String userId;
 
-  const TaskCard({Key? key, required this.task}) : super(key: key);
+  const TaskCard({
+    Key? key,
+    required this.task,
+    required this.taskId,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +116,18 @@ class TaskCard extends StatelessWidget {
                 Text(task['deadlineTime'] ?? 'No deadline time'),
               ],
             ),
+            SizedBox(height: 16),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton.icon(
+                onPressed: () => _deleteTask(context),
+                icon: Icon(Icons.delete),
+                label: Text('Delete'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -115,5 +138,24 @@ class TaskCard extends StatelessWidget {
     if (dateString == null) return 'No date';
     DateTime date = DateTime.parse(dateString);
     return DateFormat('MMM d, y').format(date);
+  }
+
+  void _deleteTask(BuildContext context) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('tasks')
+          .doc(taskId)
+          .delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Task deleted successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete task: $e')),
+      );
+    }
   }
 }

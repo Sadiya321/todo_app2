@@ -6,7 +6,8 @@ import 'package:todo_app/widgets/app_textview.dart';
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final double height;
 
-  const CustomAppBar(Text text, {
+  const CustomAppBar(
+    Text text, {
     Key? key,
     this.height = 20.0, // Set to a more appropriate default height
   }) : super(key: key);
@@ -30,28 +31,46 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      toolbarHeight: widget.height.h,
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      elevation: 0,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(Icons.menu, color: Theme.of(context).colorScheme.surface),
-          GestureDetector(
-            onTap: () => _showDatePicker(context),
-            child: AppTextView(
-              text: date,
-              textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.surface,
-                fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: AppBar(
+        toolbarHeight: widget.height.h,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 0,
+        leading: Icon(Icons.menu, color: Theme.of(context).colorScheme.surface),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () => _showDatePicker(context),
+              child: Row(
+                children: [
+                  // Icon(Icons.menu,
+                  //     color: Theme.of(context).colorScheme.surface),
+                  // SizedBox(width: 16), // Adjust the spacing as needed
+                ],
               ),
             ),
-          ),
-          Icon(Icons.timer, color: Theme.of(context).colorScheme.surface),
-        ],
+            Expanded(
+              child: Center(
+                child: GestureDetector(
+                  onTap: () => _showDatePicker(context),
+                  child: AppTextView(
+                    // textAlign: TextAlign.center,
+                    text: date,
+                    textStyle:
+                        Theme.of(context).textTheme.titleMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.surface,
+                              fontWeight: FontWeight.bold,
+                            ),
+                  ),
+                ),
+              ),
+            ),
+            Icon(Icons.timer, color: Theme.of(context).colorScheme.surface),
+          ],
+        ),
+        centerTitle: true,
       ),
-      centerTitle: true,
     );
   }
 

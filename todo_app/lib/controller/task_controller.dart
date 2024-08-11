@@ -17,6 +17,7 @@ class TaskController extends GetxController {
     DateTime? deadlineDate,
     TimeOfDay? deadlineTime,
     String? attachments,
+    bool? isCompleted,
   }) async {
     try {
       User? currentUser = _auth.currentUser;
@@ -25,6 +26,14 @@ class TaskController extends GetxController {
         throw Exception("No user is logged in.");
       }
 
+      // Create a new document reference with an auto-generated ID
+      DocumentReference taskDocRef = _firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .collection('tasks')
+          .doc();
+
+      // Prepare task data including the auto-generated document ID
       Map<String, dynamic> taskData = {
         'title': title,
         'category': category,
@@ -35,13 +44,12 @@ class TaskController extends GetxController {
         'deadlineTime': deadlineTime?.format(Get.context!),
         'attachments': attachments,
         'createdAt': FieldValue.serverTimestamp(),
+        'isCompleted': false,
+        'id': taskDocRef.id, // Assign the document ID to the 'id' field
       };
 
-      await _firestore
-          .collection('users')
-          .doc(currentUser.uid)
-          .collection('tasks')
-          .add(taskData);
+      // Save the task data to Firestore
+      await taskDocRef.set(taskData);
 
       Get.snackbar('Success', 'Task created successfully!');
     } catch (e) {
