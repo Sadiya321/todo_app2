@@ -3,7 +3,6 @@ import 'dart:convert'; // Import to use jsonEncode and jsonDecode
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/theme/theme_const.dart';
 import 'package:todo_app/widgets/app_textfield.dart';
 import 'package:todo_app/widgets/app_textview.dart';
 
@@ -90,10 +89,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               text: 'Category',
               textStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary
-                        .withOpacity(0.6),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.6),
                   ),
             ),
             SizedBox(height: 10.h),
@@ -130,45 +127,51 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
-Widget _buildCategoryButtons() {
-  List<String> categories = ['Personal', 'Teams', 'Work', 'Shopping', 'Health'];
+  Widget _buildCategoryButtons() {
+    List<String> categories = [
+      'Personal',
+      'Teams',
+      'Work',
+      'Shopping',
+      'Health'
+    ];
 
-  // Ensure selected category is at the top
-  List<String> displayedCategories = [_selectedCategory]
-    ..addAll(categories.where((category) => category != _selectedCategory));
+    // Ensure selected category is at the top
+    List<String> displayedCategories = [_selectedCategory]
+      ..addAll(categories.where((category) => category != _selectedCategory));
 
-  int visibleCount = _isExpanded ? displayedCategories.length : 2;
+    int visibleCount = _isExpanded ? displayedCategories.length : 2;
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        height: 80.h, // Set a fixed height or adjust based on your layout
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Two columns per row
-            crossAxisSpacing: 10.w, // Spacing between columns
-            mainAxisSpacing: 10.h, // Spacing between rows
-            childAspectRatio: 3, // Aspect ratio for grid items
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 80.h, // Set a fixed height or adjust based on your layout
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // Two columns per row
+              crossAxisSpacing: 10.w, // Spacing between columns
+              mainAxisSpacing: 10.h, // Spacing between rows
+              childAspectRatio: 3, // Aspect ratio for grid items
+            ),
+            itemCount: visibleCount,
+            shrinkWrap: true,
+            physics:
+                AlwaysScrollableScrollPhysics(), // Prevent scrolling within the grid
+            itemBuilder: (context, index) {
+              String category = displayedCategories[index];
+              bool isSelected = _selectedCategory == category;
+
+              return _buildCategoryButton(category, isSelected);
+            },
           ),
-          itemCount: visibleCount,
-          shrinkWrap: true,
-          physics: AlwaysScrollableScrollPhysics(), // Prevent scrolling within the grid
-          itemBuilder: (context, index) {
-            String category = displayedCategories[index];
-            bool isSelected = _selectedCategory == category;
-
-            return _buildCategoryButton(category, isSelected);
-          },
         ),
-      ),
-      if (!_isExpanded && displayedCategories.length > 2) _buildShowMoreButton(),
-      if (_isExpanded) _buildShowLessButton(),
-    ],
-  );
-}
-
-
+        if (!_isExpanded && displayedCategories.length > 2)
+          _buildShowMoreButton(),
+        if (_isExpanded) _buildShowLessButton(),
+      ],
+    );
+  }
 
   Widget _buildCategoryButton(String category, bool isSelected) {
     return GestureDetector(
@@ -180,9 +183,8 @@ Widget _buildCategoryButtons() {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 15.h),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Colors.white,
+          color:
+              isSelected ? Theme.of(context).colorScheme.primary : Colors.white,
           border: Border.all(
             color: Theme.of(context).colorScheme.primary,
           ),
@@ -199,7 +201,8 @@ Widget _buildCategoryButtons() {
                           ? Icons.work
                           : category == 'Shopping'
                               ? Icons.shopping_cart
-                              : Icons.health_and_safety, // For "Health" category
+                              : Icons
+                                  .health_and_safety, // For "Health" category
               color: isSelected
                   ? Colors.white
                   : Theme.of(context).colorScheme.primary,
@@ -369,7 +372,7 @@ Widget _buildCategoryButtons() {
     );
   }
 
- Future<void> _selectStartDate(BuildContext context) async {
+  Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -404,46 +407,52 @@ Widget _buildCategoryButtons() {
     }
   }
 
- Future<void> _selectStartTime(BuildContext context) async {
-  final TimeOfDay? picked = await showTimePicker(
-    context: context,
-    initialTime: TimeOfDay.now(),
-    builder: (BuildContext context, Widget? child) {
-      return Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: ColorScheme.light(
-            primary: Theme.of(context).colorScheme.primary, // Header background color
-            onPrimary: Colors.white, // Header text color
-            onSurface: Theme.of(context).colorScheme.onSurface, // Body text color
-          ),
-          textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.primary, // Button text color
+  Future<void> _selectStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context)
+                  .colorScheme
+                  .primary, // Header background color
+              onPrimary: Colors.white, // Header text color
+              onSurface:
+                  Theme.of(context).colorScheme.onSurface, // Body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    Theme.of(context).colorScheme.primary, // Button text color
+              ),
+            ),
+            timePickerTheme: TimePickerThemeData(
+              dialHandColor:
+                  Theme.of(context).colorScheme.primary, // Color of the hand
+              dialBackgroundColor:
+                  Colors.grey[200], // Background color of the dial
+              hourMinuteColor: MaterialStateColor.resolveWith(
+                (states) => states.contains(MaterialState.selected)
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey[200]!,
+              ), // Color of hour and minute text
+              hourMinuteTextColor: MaterialStateColor.resolveWith(
+                (states) => states.contains(MaterialState.selected)
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.onSurface,
+              ), // Color of hour and minute text
             ),
           ),
-          timePickerTheme: TimePickerThemeData(
-            dialHandColor: Theme.of(context).colorScheme.primary, // Color of the hand
-            dialBackgroundColor: Colors.grey[200], // Background color of the dial
-            hourMinuteColor: MaterialStateColor.resolveWith(
-              (states) => states.contains(MaterialState.selected)
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.grey[200]!,
-            ), // Color of hour and minute text
-            hourMinuteTextColor: MaterialStateColor.resolveWith(
-              (states) => states.contains(MaterialState.selected)
-                  ? Colors.white
-                  : Theme.of(context).colorScheme.onSurface,
-            ), // Color of hour and minute text
-          ),
-        ),
-        child: child!,
-      );
-    },
-  );
-  if (picked != null && picked != _startTime) {
-    setState(() {
-      _startTime = picked;
-    });
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && picked != _startTime) {
+      setState(() {
+        _startTime = picked;
+      });
+    }
   }
 }
- }
