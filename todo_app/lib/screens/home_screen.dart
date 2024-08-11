@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:todo_app/custom_widgets/custom_appbar.dart';
 import 'package:todo_app/screens/add_new_screen.dart';
+import 'package:todo_app/screens/all_categories/all_categories.dart';
 import 'package:todo_app/screens/category_screen/pages/category_screen.dart';
 import 'package:todo_app/theme/theme_const.dart';
 import 'package:todo_app/widgets/app_textview.dart';
@@ -110,7 +111,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const CategorySelectionScreen(), // Replace with the actual dashboard screen
+                                    AllCategories(),
+                                        // const CategorySelectionScreen(),
                                   ),
                                 );
                               },

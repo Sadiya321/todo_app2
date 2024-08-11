@@ -133,7 +133,7 @@ Widget _buildCategoryButtons() {
   List<String> categories = ['Personal', 'Teams', 'Work', 'Shopping', 'Health'];
 
   // Ensure selected category is at the top
-  List<String> displayedCategories = [ _selectedCategory ]
+  List<String> displayedCategories = [_selectedCategory]
     ..addAll(categories.where((category) => category != _selectedCategory));
 
   int visibleCount = _isExpanded ? displayedCategories.length : 2;
@@ -141,16 +141,32 @@ Widget _buildCategoryButtons() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      for (int i = 0; i < visibleCount; i++)
-        Padding(
-          padding: EdgeInsets.only(bottom: 10.h),
-          child: _buildCategoryButton(displayedCategories[i], _selectedCategory == displayedCategories[i]),
+      Container(
+        height: 80.h, // Set a fixed height or adjust based on your layout
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Two columns per row
+            crossAxisSpacing: 10.w, // Spacing between columns
+            mainAxisSpacing: 10.h, // Spacing between rows
+            childAspectRatio: 3, // Aspect ratio for grid items
+          ),
+          itemCount: visibleCount,
+          shrinkWrap: true,
+          physics: AlwaysScrollableScrollPhysics(), // Prevent scrolling within the grid
+          itemBuilder: (context, index) {
+            String category = displayedCategories[index];
+            bool isSelected = _selectedCategory == category;
+
+            return _buildCategoryButton(category, isSelected);
+          },
         ),
+      ),
       if (!_isExpanded && displayedCategories.length > 2) _buildShowMoreButton(),
       if (_isExpanded) _buildShowLessButton(),
     ],
   );
 }
+
 
 
   Widget _buildCategoryButton(String category, bool isSelected) {
