@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_app/widgets/app_textview.dart';
 
 class ScrollableDateChips extends StatelessWidget {
   final DateTime startDate;
@@ -19,7 +18,6 @@ class ScrollableDateChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       height: 70.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -53,8 +51,8 @@ class DateChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dayName = DateFormat('E').format(date); // Abbreviated day name (Mon, Tue, etc.)
-    final day = date.day.toString(); // Day number
+    final dayName = DateFormat('E').format(date);
+    final day = date.day.toString();
 
     return GestureDetector(
       onTap: onTap,
@@ -68,16 +66,16 @@ class DateChip extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppTextView(
-              text:day,
-              textStyle: TextStyle(
+            Text(
+              day,
+              style: TextStyle(
                 color: selected ? Colors.white : Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            AppTextView(
-              text:dayName,
-              textStyle: TextStyle(
+            Text(
+              dayName,
+              style: TextStyle(
                 color: selected ? Colors.white : Colors.black,
               ),
             ),

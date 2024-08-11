@@ -2,30 +2,28 @@ import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
   final String title;
-  final String subtitle;
+  final int taskCount;
   final IconData icon;
-  final Color iconColor; // Add this parameter
-  final VoidCallback onTap; // Add this parameter
+  final Color iconColor;
+  final VoidCallback onTap;
 
   const CategoryCard({
+    Key? key,
     required this.title,
-    required this.subtitle,
+    required this.taskCount,
     required this.icon,
-    required this.iconColor, // Initialize the iconColor parameter
-    required this.onTap, // Initialize the onTap parameter
-  });
+    required this.iconColor,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Icon(
-          icon,
-          color: iconColor, // Use the iconColor parameter
-        ),
+        leading: Icon(icon, color: iconColor),
         title: Text(title),
-        subtitle: Text(subtitle),
-        onTap: onTap, // Use the onTap parameter
+        subtitle: Text('$taskCount Tasks'),
+        onTap: onTap,
       ),
     );
   }

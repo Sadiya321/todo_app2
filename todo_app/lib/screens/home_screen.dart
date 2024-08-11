@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:todo_app/custom_widgets/custom_appbar.dart';
 import 'package:todo_app/screens/add_new_screen.dart';
-import 'package:todo_app/screens/all_categories/all_categories.dart';
 import 'package:todo_app/screens/category_screen/pages/category_screen.dart';
 import 'package:todo_app/theme/theme_const.dart';
 import 'package:todo_app/widgets/app_textview.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key,});
-
-  
+  const HomePage({
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -93,13 +91,14 @@ class _HomePageState extends State<HomePage> {
                                     .textTheme
                                     .labelLarge!
                                     .copyWith(
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
                             ),
-                            SizedBox(width:0.01.sw),
- ElevatedButton(
+                            SizedBox(width: 0.01.sw),
+                            ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Theme.of(context).colorScheme.background,
@@ -111,8 +110,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                    AllCategories(),
-                                        // const CategorySelectionScreen(),
+                                        CategorySelectionScreen(),
+                                    // const CategorySelectionScreen(),
                                   ),
                                 );
                               },
@@ -122,17 +121,14 @@ class _HomePageState extends State<HomePage> {
                                     .textTheme
                                     .labelLarge!
                                     .copyWith(
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
                             ),
-
                           ],
                         ),
-
-
-                        
                       ],
                     ),
                   ),
@@ -226,17 +222,14 @@ class _HomePageState extends State<HomePage> {
                             "Work on project",
                             "18:00 - 19:00",
                           ),
-                          
                         ],
                       ),
                     ),
-                    
                   ],
                 ),
               ),
             ),
           ),
-          
         ],
       ),
     );
