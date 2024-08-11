@@ -8,7 +8,7 @@ import 'package:todo_app/widgets/app_textfield.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
-
+  
   @override
   State<CreateTaskScreen> createState() => _CreateTaskScreenState();
 }
@@ -21,6 +21,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   TimeOfDay? _startTime;
   DateTime? _deadlineDate;
   TimeOfDay? _deadlineTime;
+  bool _isExpanded = false;
 
   void _createTask() async {
     // Retrieve SharedPreferences instance
@@ -90,21 +91,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context)
                         .colorScheme
-                        .primaryColor
+                        .primary
                         .withOpacity(0.6),
                   ),
             ),
             SizedBox(height: 10.h),
-            Row(
-              children: [
-                _buildCategoryButton(
-                    'Personal', _selectedCategory == 'Personal'),
-                SizedBox(width: 10.w),
-                _buildCategoryButton('Teams', _selectedCategory == 'Teams'),
-                SizedBox(width: 10.w),
-                _buildDropDownArrow(), // Placeholder for the dropdown arrow
-              ],
-            ),
+            _buildCategoryButtons(),
             SizedBox(height: 20.h),
             AppTextField(
               controller: _descriptionController,
@@ -117,8 +109,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             _buildDateAndTimePicker(),
             SizedBox(height: 20.h),
             AppTextField(
-              controller:
-                  TextEditingController(), // Placeholder for attachments/links
+              controller: TextEditingController(),
               hintText: 'Any relevant files or links',
               title: 'Attachments/Links',
               onValueChange: (value) {},
@@ -138,62 +129,126 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
+Widget _buildCategoryButtons() {
+  List<String> categories = ['Personal', 'Teams', 'Work', 'Shopping', 'Health'];
+
+  // Ensure selected category is at the top
+  List<String> displayedCategories = [ _selectedCategory ]
+    ..addAll(categories.where((category) => category != _selectedCategory));
+
+  int visibleCount = _isExpanded ? displayedCategories.length : 2;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      for (int i = 0; i < visibleCount; i++)
+        Padding(
+          padding: EdgeInsets.only(bottom: 10.h),
+          child: _buildCategoryButton(displayedCategories[i], _selectedCategory == displayedCategories[i]),
+        ),
+      if (!_isExpanded && displayedCategories.length > 2) _buildShowMoreButton(),
+      if (_isExpanded) _buildShowLessButton(),
+    ],
+  );
+}
+
+
   Widget _buildCategoryButton(String category, bool isSelected) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedCategory = category;
-          });
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 15.h),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Colors.white,
-            border: Border.all(
-              color: Theme.of(context).colorScheme.primary,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedCategory = category;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 15.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Colors.white,
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              category == 'Personal'
+                  ? Icons.person
+                  : category == 'Teams'
+                      ? Icons.group
+                      : category == 'Work'
+                          ? Icons.work
+                          : category == 'Shopping'
+                              ? Icons.shopping_cart
+                              : Icons.health_and_safety, // For "Health" category
+              color: isSelected
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.primary,
             ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                category == 'Personal' ? Icons.person : Icons.group,
-                color: isSelected
-                    ? Colors.white
-                    : Theme.of(context).colorScheme.primary,
-              ),
-              SizedBox(width: 5.w),
-              AppTextView(
-                text: category,
-                textStyle: Theme.of(context).textTheme.button!.copyWith(
-                      color: isSelected
-                          ? Colors.white
-                          : Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
+            SizedBox(width: 5.w),
+            AppTextView(
+              text: category,
+              textStyle: Theme.of(context).textTheme.button!.copyWith(
+                    color: isSelected
+                        ? Colors.white
+                        : Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildDropDownArrow() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 15.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Theme.of(context).colorScheme.primary,
-        ),
+  Widget _buildShowMoreButton() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isExpanded = true;
+        });
+      },
+      child: Row(
+        children: [
+          AppTextView(
+            text: 'Show More',
+            textStyle: Theme.of(context).textTheme.button!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          Icon(
+            Icons.arrow_drop_down,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ],
       ),
-      child: Icon(
-        Icons.arrow_drop_down,
-        color: Theme.of(context).colorScheme.primary,
+    );
+  }
+
+  Widget _buildShowLessButton() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isExpanded = false;
+        });
+      },
+      child: Row(
+        children: [
+          AppTextView(
+            text: 'Show Less',
+            textStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          Icon(
+            Icons.arrow_drop_up,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ],
       ),
     );
   }
@@ -247,7 +302,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           SizedBox(width: 10.w),
           AppTextView(
             text: hint,
-            textStyle: Theme.of(context).textTheme.button!.copyWith(
+            textStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
                   color: Colors.grey,
                 ),
           ),
@@ -263,7 +318,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         backgroundColor: Colors.white,
         side: BorderSide(color: Theme.of(context).colorScheme.primary),
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero, // Remove circular radius
         ),
       ),
@@ -283,7 +338,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.primary,
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero, // Remove circular radius
         ),
       ),
@@ -297,12 +352,33 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
-  Future<void> _selectStartDate(BuildContext context) async {
+ Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context)
+                  .colorScheme
+                  .primary, // Header background color
+              onPrimary: Colors.white, // Header text color
+              onSurface:
+                  Theme.of(context).colorScheme.onSurface, // Body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    Theme.of(context).colorScheme.primary, // Button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _startDate) {
       setState(() {
@@ -311,15 +387,46 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     }
   }
 
-  Future<void> _selectStartTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null && picked != _startTime) {
-      setState(() {
-        _startTime = picked;
-      });
-    }
+ Future<void> _selectStartTime(BuildContext context) async {
+  final TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: TimeOfDay.now(),
+    builder: (BuildContext context, Widget? child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: Theme.of(context).colorScheme.primary, // Header background color
+            onPrimary: Colors.white, // Header text color
+            onSurface: Theme.of(context).colorScheme.onSurface, // Body text color
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              primary: Theme.of(context).colorScheme.primary, // Button text color
+            ),
+          ),
+          timePickerTheme: TimePickerThemeData(
+            dialHandColor: Theme.of(context).colorScheme.primary, // Color of the hand
+            dialBackgroundColor: Colors.grey[200], // Background color of the dial
+            hourMinuteColor: MaterialStateColor.resolveWith(
+              (states) => states.contains(MaterialState.selected)
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey[200]!,
+            ), // Color of hour and minute text
+            hourMinuteTextColor: MaterialStateColor.resolveWith(
+              (states) => states.contains(MaterialState.selected)
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.onSurface,
+            ), // Color of hour and minute text
+          ),
+        ),
+        child: child!,
+      );
+    },
+  );
+  if (picked != null && picked != _startTime) {
+    setState(() {
+      _startTime = picked;
+    });
   }
+}
 }
