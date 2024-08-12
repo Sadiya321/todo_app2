@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../../widgets/app_textview.dart';
 import '../widgets/category_card.dart';
 import '../widgets/date_chips.dart';
 import 'category_task.dart';
@@ -28,9 +29,9 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text(
-          '${selectedDate.day} ${_getMonthName(selectedDate.month)}',
-          style: TextStyle(color: Colors.black),
+        title: AppTextView(
+          text: '${selectedDate.day} ${_getMonthName(selectedDate.month)}',
+          textStyle: TextStyle(color: Colors.black),
         ),
         actions: [
           IconButton(
@@ -58,9 +59,9 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
               },
             ),
             const SizedBox(height: 24.0),
-            const Text(
-              'Choose Category',
-              style: TextStyle(
+            const AppTextView(
+              text: 'Choose Category',
+              textStyle: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),

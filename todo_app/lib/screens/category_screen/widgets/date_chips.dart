@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/widgets/app_textview.dart';
 
 class ScrollableDateChips extends StatelessWidget {
   final DateTime startDate;
@@ -66,16 +67,16 @@ class DateChip extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              day,
-              style: TextStyle(
+            AppTextView(
+              text:day,
+              textStyle: TextStyle(
                 color: selected ? Colors.white : Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              dayName,
-              style: TextStyle(
+            AppTextView(
+              text:dayName,
+              textStyle: TextStyle(
                 color: selected ? Colors.white : Colors.black,
               ),
             ),

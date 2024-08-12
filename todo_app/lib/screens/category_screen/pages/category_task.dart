@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/widgets/app_textview.dart';
 
 class CategoryTasksScreen extends StatelessWidget {
   final String categoryName;
@@ -15,7 +16,7 @@ class CategoryTasksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$categoryName Tasks'),
+        title: AppTextView(text:'$categoryName Tasks'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _getTasks(),
@@ -91,17 +92,17 @@ class TaskCard extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            Text(task['description'] ?? 'No description'),
+            AppTextView(text:task['description'] ?? 'No description'),
             SizedBox(height: 8),
             Row(
               children: [
                 Icon(Icons.calendar_today, size: 16),
                 SizedBox(width: 4),
-                Text(_formatDate(task['startDate'])),
+                AppTextView(text:_formatDate(task['startDate'])),
                 SizedBox(width: 16),
                 Icon(Icons.access_time, size: 16),
                 SizedBox(width: 4),
-                Text(task['startTime'] ?? 'No start time'),
+                AppTextView(text:task['startTime'] ?? 'No start time'),
               ],
             ),
             SizedBox(height: 4),
@@ -109,11 +110,11 @@ class TaskCard extends StatelessWidget {
               children: [
                 Icon(Icons.flag, size: 16),
                 SizedBox(width: 4),
-                Text(_formatDate(task['deadlineDate'])),
+                AppTextView(text:_formatDate(task['deadlineDate'])),
                 SizedBox(width: 16),
                 Icon(Icons.alarm, size: 16),
                 SizedBox(width: 4),
-                Text(task['deadlineTime'] ?? 'No deadline time'),
+                AppTextView(text:task['deadlineTime'] ?? 'No deadline time'),
               ],
             ),
             SizedBox(height: 16),
@@ -122,7 +123,7 @@ class TaskCard extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => _deleteTask(context),
                 icon: Icon(Icons.delete),
-                label: Text('Delete'),
+                label: AppTextView(text:'Delete'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                 ),

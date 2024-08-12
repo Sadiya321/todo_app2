@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../widgets/app_textview.dart';
+
 class GetStartedPage extends StatelessWidget {
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
@@ -26,18 +28,19 @@ class GetStartedPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Welcome to Our App!',
-                style: Theme.of(context).textTheme.headline4!.copyWith(
+              AppTextView(
+                text: 'Welcome to Our App!',
+                textStyle: Theme.of(context).textTheme.headline4!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.blueGrey[800], // Dark text color
                     ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20), // Space between elements
-              Text(
-                'Get started by signing in anonymously to explore the features of our app.',
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+              AppTextView(
+                text:
+                    'Get started by signing in anonymously to explore the features of our app.',
+                textStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
                       color: Colors.blueGrey[600], // Subtle text color
                     ),
                 textAlign: TextAlign.center,
@@ -56,9 +59,9 @@ class GetStartedPage extends StatelessWidget {
                       vertical: 15.0,
                       horizontal: 30.0), // Padding inside the button
                 ),
-                child: Text(
-                  'Get Started',
-                  style: TextStyle(
+                child: AppTextView(
+                  text: 'Get Started',
+                  textStyle: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
